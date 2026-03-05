@@ -11,11 +11,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 ################################################
 ## Settings
 ################################################
-cell_by_gene = pd.read_csv('../data/count_matrix_ML499M1-S1.tsv', sep = '\t', index_col=0)
+cell_by_gene = pd.read_csv('../data/count_matrix_HT268B1-Th1H3.tsv', sep = '\t', index_col=0)
 # counts = pd.read_csv('../data/count_matrix_ML499M1-S1.tsv', sep = '\t', index_col=0)
 
-outfile = ("../data/networks/ML499M1-S1_count_network.tsv")
-cell_list_out = ("../data/networks/ML499M1-S1_cell_list.txt")
+outfile = ("../data/networks/HT268B1-Th1H3_count_network.tsv")
+cell_list_out = ("../data/networks/HT268B1-Th1H3-S1_cell_list.txt")
 
 # number of highly variable genes to use before PCA
 top_n = 1500

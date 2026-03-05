@@ -39,9 +39,10 @@ from sklearn.preprocessing import MinMaxScaler
 
 # args = parser.parse_args()
 
-embeds = "../data/embeds/ML499M1-S1_150_10_embed.tsv"
-cell_annotations = "./cell_annotations.csv"
-out_dir = './figures/'
+sample = "HT268B1-Th1H3"
+embeds = f"../data/embeds/{sample}_150_10_embed.tsv"
+cell_annotations = f"./{sample}_UMAPs/cell_annotations.csv"
+out_dir = f'./{sample}_UMAPs/'
 
 '''
 Get cell annotations
@@ -76,10 +77,10 @@ def make_umap(ad, out_dir, name = "repel") :
 
     # Save figures
     sc.pl.umap(
-        ad, 
-        color='cell_type', 
-        title=f'UMAP {name}', 
-        legend_loc='right', 
+        ad,
+        color='cell_type',
+        title=f'UMAP {name}',
+        legend_loc='right margin',
         frameon=False,
         show=False,
         save=f'UMAP_{name}.png'

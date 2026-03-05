@@ -6,6 +6,9 @@ import sys
 import argparse
 import os 
 from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+
+# TODO: retune this based on new ways to make networks
 
 parser = argparse.ArgumentParser(description="Process count and expression data.")
 
@@ -50,6 +53,7 @@ args = parser.parse_args()
 Get cell annotations
 '''
 def get_cell_annotations(args, expression_df) :
+
     print("Getting cell annotations")
     # Download models if not done before
     model_dir = os.path.expanduser("~/.celltypist/models/")
@@ -64,6 +68,8 @@ def get_cell_annotations(args, expression_df) :
 
     sc.pp.normalize_total(adata, target_sum=1e4)
     sc.pp.log1p(adata)
+    print("NaN after normalize:", np.isnan(adata.X).sum())
+
 
     # Predict using model
     predictions = celltypist.annotate(
@@ -113,7 +119,7 @@ def make_umap(args, ad, name) :
         ad, 
         color='cell_type', 
         title=f'UMAP {name}', 
-        legend_loc='right', 
+        legend_loc='right margin',
         frameon=False,
         show=False,
         save=f'UMAP_{name}.png'
@@ -130,7 +136,7 @@ def run(args) :
     # Choose only top expression genes
     scaler = MinMaxScaler()
     X_scaled = scaler.fit_transform(expression_df)
-    gene_var = pd.Series(X_scaled.var(axis=0), index=expression_df.columns)
+    gene_var = pd.Series(expression_df.var(axis=0), index=expression_df.columns)
     top_n = args.num_top
     top_genes = gene_var.sort_values(ascending=False).head(top_n).index
     expression_var = expression_df[top_genes]
@@ -138,9 +144,9 @@ def run(args) :
     # For top counts, first remove duplicates due to windows
     duplicate_mask = counts_df.T.duplicated()
     counts_unique = counts_df.loc[:, ~duplicate_mask]
-    scaler = MinMaxScaler()
-    X_scaled = scaler.fit_transform(counts_unique)
-    gene_var = pd.Series(X_scaled.var(axis=0), index=counts_unique.columns)
+    # scaler = MinMaxScaler()
+    # X_scaled = scaler.fit_transform(counts_unique)
+    gene_var = pd.Series(counts_unique.var(axis=0), index=counts_unique.columns)
     top_genes = gene_var.sort_values(ascending=False).head(top_n).index
     counts_var = counts_unique[top_genes]
 
